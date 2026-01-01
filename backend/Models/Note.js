@@ -8,6 +8,10 @@ const NoteSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+     summary: {
+      type: String, 
+      required: false,
+    },
     audio: {
         type: String, // store URL or file path
         required: false,

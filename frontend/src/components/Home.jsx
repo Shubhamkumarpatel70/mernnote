@@ -1,9 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NoteModal from "./NoteModal";
 import { useLocation } from "react-router-dom";
-
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
