@@ -9,6 +9,7 @@ import summarizeRoute from './routes/summarize.js';
 
 const __dirname = path.resolve();
 dotenv.config();
+
 const app = express();
 const PORT = process.env.PORT || 1000;
 
