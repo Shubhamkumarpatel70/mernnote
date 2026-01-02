@@ -8,10 +8,9 @@ import notesRoutes from './routes/notes.js';
 import summarizeRoute from './routes/summarize.js';
 
 const __dirname = path.resolve();
-dotenv.config({ path: path.join(__dirname, ".env") });
-
+dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 1000;
 
 // Middleware
 app.use(express.json());
@@ -20,8 +19,7 @@ app.use(cors({
     ? "*"
     : "http://localhost:5173",
   credentials: true
-}));
-
+}))
 // API routes
 app.use("/api/users", authRoutes);
 app.use("/api/notes", notesRoutes);
@@ -29,7 +27,6 @@ app.use("/api/summarize", summarizeRoute);
 
 // DB
 connectDB();
-
 
 
 // Start server
