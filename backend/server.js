@@ -16,23 +16,28 @@ const PORT = process.env.PORT || 6000;
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: process.env.NODE_ENV === "production" ? "*" : "http://localhost:5173",
+  origin: process.env.NODE_ENV === "production"
+    ? "*"
+    : "http://localhost:5173",
   credentials: true
 }));
 
-// Routes
+// API routes
 app.use("/api/users", authRoutes);
 app.use("/api/notes", notesRoutes);
 app.use("/api/summarize", summarizeRoute);
 
-// Connect DB
+// DB
 connectDB();
 
-// Serve frontend in production
+// Serve frontend (Express 5 safe)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+
+  app.use((req, res) => {
+    res.sendFile(
+      path.join(__dirname, "../frontend/dist/index.html")
+    );
   });
 }
 
