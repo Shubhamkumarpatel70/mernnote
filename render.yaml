@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: notes-app
+    name: mernnote
     env: node
-    buildCommand: npm run build
+    buildCommand: npm install && cd frontend && npm install && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
