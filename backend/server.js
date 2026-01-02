@@ -1,35 +1,42 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: path.resolve('backend/.env') });
 import express from 'express';
-import cors from 'cors'
+import cors from 'cors';
+import path from 'path';
 import { connectDB } from './config/db.js';
-import authRoutes from './routes/auth.js'
-import notesRoutes from './routes/notes.js'
-import summarizeRoute from "./routes/summarize.js";
-import path from 'path'
-const app =express();
-const PORT = process.env.PORT || 6000;
-app.use(express.json());
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+import authRoutes from './routes/auth.js';
+import notesRoutes from './routes/notes.js';
+import summarizeRoute from './routes/summarize.js';
 
+const __dirname = path.resolve();
+dotenv.config({ path: path.join(__dirname, ".env") });
+
+const app = express();
+const PORT = process.env.PORT || 6000;
+
+// Middleware
+app.use(express.json());
+app.use(cors({
+  origin: process.env.NODE_ENV === "production" ? "*" : "http://localhost:5173",
+  credentials: true
+}));
+
+// Routes
 app.use("/api/users", authRoutes);
 app.use("/api/notes", notesRoutes);
-
 app.use("/api/summarize", summarizeRoute);
-const __dirname = path.resolve();
 
+// Connect DB
+connectDB();
+
+// Serve frontend in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  
-  app.get("/*", (req, res) => {
+  app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
   });
 }
 
-connectDB();
-app.listen(PORT, ()=>{
-    console.log(`server is running on ${PORT}`)
-})
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
