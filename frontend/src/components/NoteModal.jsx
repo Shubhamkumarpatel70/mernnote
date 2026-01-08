@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 const NoteModal = ({ isOpen, onClose, note, onSave }) => {
   const [title, setTitle] = useState("");
@@ -28,10 +29,9 @@ const NoteModal = ({ isOpen, onClose, note, onSave }) => {
     setLoadingSummary(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:10000/api/summarize",
-        { text: description }
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/summarize`, {
+        text: description,
+      });
 
       const { summary: result, source } = response.data;
       setSummary(result);
@@ -82,16 +82,15 @@ const NoteModal = ({ isOpen, onClose, note, onSave }) => {
         // Update note
         data = (
           await axios.put(
-            `http://localhost:10000/api/notes/${note._id}`,
+            `${API_BASE_URL}/api/notes/${note._id}`,
             formData,
             config
           )
         ).data;
       } else {
         // Create note
-        data = (
-          await axios.post("http://localhost:10000/api/notes", formData, config)
-        ).data;
+        data = (await axios.post(`${API_BASE_URL}/api/notes`, formData, config))
+          .data;
       }
 
       onSave(data);
